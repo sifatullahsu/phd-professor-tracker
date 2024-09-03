@@ -1,0 +1,222 @@
+'use client'
+
+import Modal from '@/components/Modal'
+import { TSubmission } from '@/types'
+import { useEffect, useState } from 'react'
+import { MdEditNote, MdOutlineDeleteSweep } from 'react-icons/md'
+import Swal from 'sweetalert2'
+
+type TFilter = {
+  page: number
+  size: number
+  sort: string
+  search: string
+}
+
+const Home = () => {
+  const [data, setData] = useState<TSubmission[]>([])
+  const [pagination, setPagination] = useState({})
+  const [refetch, setRefetch] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [edit, setEdit] = useState<TSubmission | null>(null)
+  const [filter, setFilter] = useState<TFilter>({
+    page: 1,
+    size: 20,
+    sort: '-_id',
+    search: ''
+  })
+
+  useEffect(() => {
+    ;(async () => {
+      setIsLoading(true)
+
+      const res = await fetch('/api/submissions')
+      const result = await res.json()
+
+      if (result.success) {
+        setData(result.data)
+        setPagination(result.pagination)
+      }
+
+      setIsLoading(false)
+    })()
+  }, [refetch])
+
+  const deleteHandler = async (id: string) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async result => {
+      if (result.isConfirmed) {
+        const res = await fetch(`/api/submissions/${id}`, { method: 'DELETE' })
+        const result = await res.json()
+
+        if (result?.success) {
+          setRefetch(new Date().toISOString())
+
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your record has been deleted.',
+            icon: 'success'
+          })
+        }
+      }
+    })
+  }
+
+  const editHandler = async (data: Partial<TSubmission>) => {
+    const res = await fetch(`/api/submissions/${data._id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    const result = await res.json()
+
+    if (result?.success) {
+      setRefetch(new Date().toISOString())
+
+      Swal.fire({
+        title: 'Updated!',
+        text: 'Your record has been updated.',
+        icon: 'success'
+      })
+    }
+  }
+
+  const createHandler = async (data: TSubmission) => {
+    const res = await fetch(`/api/submissions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    const result = await res.json()
+
+    if (result?.success) {
+      setRefetch(new Date().toISOString())
+
+      Swal.fire({
+        title: 'Created!',
+        text: 'Your record has been created.',
+        icon: 'success'
+      })
+    }
+  }
+
+  const openModalHandler = (data?: TSubmission) => {
+    setEdit(data ?? null)
+    document.getElementById('submission_modal').showModal()
+  }
+
+  const closeModalHandler = () => {
+    setEdit(null)
+    document.getElementById('submission_modal').close()
+  }
+
+  return (
+    <div className="container py-20">
+      <div className="space-y-10">
+        <div className="flex justify-between items-center">
+          <h1 className="text-lg font-medium">Submissions</h1>
+          <div className="flex space-x-3">
+            <label className="input input-sm input-bordered flex items-center gap-2">
+              <input type="text" className="grow" placeholder="Search" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </label>
+
+            <button className="btn btn-accent btn-sm" onClick={() => openModalHandler()}>
+              Create
+            </button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="table table-xs">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Job</th>
+                <th>company</th>
+                <th>location</th>
+                <th>Last Login</th>
+                <th className="text-end">Favorite Color</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((i, index) => (
+                <tr key={index}>
+                  <th>{index + 1}</th>
+                  <td>{i.name}</td>
+                  <td>{i.university}</td>
+                  <td>Littel, Schaden and Vandervort</td>
+                  <td>Canada</td>
+                  <td>12/16/2020</td>
+                  <td>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        type="button"
+                        onChange={() => deleteHandler(i._id as string)}
+                        className="btn btn-square btn-xs btn-error"
+                      >
+                        <MdOutlineDeleteSweep />
+                      </button>
+
+                      <button type="button" onChange={() => setEdit(i)} className="btn btn-square btn-xs">
+                        <MdEditNote />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Job</th>
+                <th>company</th>
+                <th>location</th>
+                <th>Last Login</th>
+                <th>Favorite Color</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div className="flex justify-end">
+          <div className="join">
+            <button className="join-item btn btn-sm">1</button>
+            <button className="join-item btn btn-sm btn-active">2</button>
+            <button className="join-item btn btn-sm">3</button>
+            <button className="join-item btn btn-sm">4</button>
+          </div>
+        </div>
+
+        <Modal
+          edit={edit}
+          closeHandler={closeModalHandler}
+          submitHandler={edit ? editHandler : createHandler}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default Home
