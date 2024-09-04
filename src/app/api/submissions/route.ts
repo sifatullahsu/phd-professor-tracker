@@ -1,7 +1,6 @@
 import { connectToMongoDB } from '@/lib/db'
 import { getPagination } from '@/lib/utils'
 import Submission from '@/models/submission.model'
-import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
   try {
@@ -10,14 +9,14 @@ export async function POST(req: Request) {
 
     const result = await Submission.create(body)
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       data: result
     })
   } catch (error) {
     console.error('Error in POST /submissions:', error)
 
-    return NextResponse.json({
+    return Response.json({
       success: false,
       error
     })
@@ -25,21 +24,20 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  const searchParams = new URLSearchParams(new URL(req.url).search)
+
   try {
     await connectToMongoDB()
-    const page = 1
-    const limit = 20
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (page - 1) * limit
-    const sort = '-_id'
-    const search = ''
+    const sort = searchParams.get('sort') || '-_id'
+    const search = searchParams.get('search')
 
     const query: Record<string, unknown> = {}
 
     if (search) {
-      query['$or'] = [
-        { name: { $regx: search, options: 'i' } },
-        { university: { $regx: search, options: 'i' } }
-      ]
+      query['$or'] = [{ name: new RegExp(search, 'i') }, { university: new RegExp(search, 'i') }]
     }
 
     const [result, count] = await Promise.all([
@@ -47,7 +45,7 @@ export async function GET(req: Request) {
       Submission.find(query).countDocuments()
     ])
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       data: result,
       pagination: getPagination({ page, limit, count })
@@ -55,7 +53,7 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error('Error in GET /submissions:', error)
 
-    return NextResponse.json({
+    return Response.json({
       success: false,
       error
     })

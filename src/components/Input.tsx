@@ -5,10 +5,11 @@ type Props = {
   title: string
   name: string
   placeholder?: string
+  value?: string
   onChange: ChangeEventHandler<HTMLInputElement>
 }
 
-const Input = ({ type = 'text', title, name, placeholder, onChange }: Props) => {
+const Input = ({ type = 'text', title, name, value, placeholder, onChange }: Props) => {
   return (
     <div>
       <label className="form-control w-full">
@@ -18,6 +19,7 @@ const Input = ({ type = 'text', title, name, placeholder, onChange }: Props) => 
         <input
           type={type}
           name={name}
+          defaultValue={value}
           placeholder={placeholder}
           onChange={onChange}
           className="input input-bordered input-sm w-full"

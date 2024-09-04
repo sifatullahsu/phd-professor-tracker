@@ -1,28 +1,22 @@
 'use client'
 
 import Modal from '@/components/Modal'
-import { TSubmission } from '@/types'
+import { qString } from '@/lib/utils'
+import { TFilter, TPagination, TSubmission } from '@/types'
 import { useEffect, useState } from 'react'
 import { MdEditNote, MdOutlineDeleteSweep } from 'react-icons/md'
 import Swal from 'sweetalert2'
 
-type TFilter = {
-  page: number
-  size: number
-  sort: string
-  search: string
-}
-
 const Home = () => {
   const [data, setData] = useState<TSubmission[]>([])
-  const [pagination, setPagination] = useState({})
+  const [pagination, setPagination] = useState<TPagination | null>(null)
   const [refetch, setRefetch] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const [edit, setEdit] = useState<TSubmission | null>(null)
+  const [openModal, setOpenModal] = useState<boolean | TSubmission>(false)
   const [filter, setFilter] = useState<TFilter>({
     page: 1,
-    size: 20,
+    limit: 20,
     sort: '-_id',
     search: ''
   })
@@ -31,7 +25,7 @@ const Home = () => {
     ;(async () => {
       setIsLoading(true)
 
-      const res = await fetch('/api/submissions')
+      const res = await fetch(`/api/submissions?${qString(filter)}`)
       const result = await res.json()
 
       if (result.success) {
@@ -41,7 +35,7 @@ const Home = () => {
 
       setIsLoading(false)
     })()
-  }, [refetch])
+  }, [refetch, filter])
 
   const deleteHandler = async (id: string) => {
     Swal.fire({
@@ -80,6 +74,7 @@ const Home = () => {
 
     if (result?.success) {
       setRefetch(new Date().toISOString())
+      setOpenModal(false)
 
       Swal.fire({
         title: 'Updated!',
@@ -99,6 +94,7 @@ const Home = () => {
 
     if (result?.success) {
       setRefetch(new Date().toISOString())
+      setOpenModal(false)
 
       Swal.fire({
         title: 'Created!',
@@ -109,13 +105,7 @@ const Home = () => {
   }
 
   const openModalHandler = (data?: TSubmission) => {
-    setEdit(data ?? null)
-    document.getElementById('submission_modal').showModal()
-  }
-
-  const closeModalHandler = () => {
-    setEdit(null)
-    document.getElementById('submission_modal').close()
+    setOpenModal(data ?? true)
   }
 
   return (
@@ -125,7 +115,12 @@ const Home = () => {
           <h1 className="text-lg font-medium">Submissions</h1>
           <div className="flex space-x-3">
             <label className="input input-sm input-bordered flex items-center gap-2">
-              <input type="text" className="grow" placeholder="Search" />
+              <input
+                type="text"
+                className="grow"
+                placeholder="Search"
+                onChange={e => setFilter(x => ({ ...x, search: e.target.value }))}
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -152,11 +147,8 @@ const Home = () => {
               <tr>
                 <th></th>
                 <th>Name</th>
-                <th>Job</th>
-                <th>company</th>
-                <th>location</th>
-                <th>Last Login</th>
-                <th className="text-end">Favorite Color</th>
+                <th>University</th>
+                <th className="text-end">Action Buttons</th>
               </tr>
             </thead>
             <tbody>
@@ -165,55 +157,75 @@ const Home = () => {
                   <th>{index + 1}</th>
                   <td>{i.name}</td>
                   <td>{i.university}</td>
-                  <td>Littel, Schaden and Vandervort</td>
-                  <td>Canada</td>
-                  <td>12/16/2020</td>
                   <td>
                     <div className="flex justify-end space-x-2">
                       <button
                         type="button"
-                        onChange={() => deleteHandler(i._id as string)}
+                        onClick={() => deleteHandler(i._id as string)}
                         className="btn btn-square btn-xs btn-error"
                       >
                         <MdOutlineDeleteSweep />
                       </button>
 
-                      <button type="button" onChange={() => setEdit(i)} className="btn btn-square btn-xs">
+                      <button
+                        type="button"
+                        onClick={() => openModalHandler(i)}
+                        className="btn btn-square btn-xs"
+                      >
                         <MdEditNote />
                       </button>
                     </div>
                   </td>
                 </tr>
               ))}
+              {isLoading && (
+                <tr>
+                  <td colSpan={7} className="p-5 text-center">
+                    <span className="loading loading-dots loading-lg"></span>
+                  </td>
+                </tr>
+              )}
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Job</th>
-                <th>company</th>
-                <th>location</th>
-                <th>Last Login</th>
-                <th>Favorite Color</th>
-              </tr>
-            </tfoot>
           </table>
         </div>
 
-        <div className="flex justify-end">
-          <div className="join">
-            <button className="join-item btn btn-sm">1</button>
-            <button className="join-item btn btn-sm btn-active">2</button>
-            <button className="join-item btn btn-sm">3</button>
-            <button className="join-item btn btn-sm">4</button>
+        {pagination && (
+          <div className="flex justify-end">
+            <div className="join">
+              <button
+                className="join-item btn btn-sm"
+                disabled={pagination.prev ? false : true}
+                onClick={() => setFilter(prev => ({ ...prev, page: pagination.prev! }))}
+              >
+                «
+              </button>
+              {new Array(pagination.total).fill('').map((i, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => setFilter(prev => ({ ...prev, page: index + 1 }))}
+                  className={`join-item btn btn-sm ${index + 1 === pagination.current ? 'btn-accent' : ''}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                className="join-item btn btn-sm"
+                disabled={pagination.next ? false : true}
+                onClick={() => setFilter(prev => ({ ...prev, page: pagination.next! }))}
+              >
+                »
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        <Modal
-          edit={edit}
-          closeHandler={closeModalHandler}
-          submitHandler={edit ? editHandler : createHandler}
-        />
+        {openModal && (
+          <Modal
+            open={openModal}
+            setOpen={setOpenModal}
+            submitHandler={openModal !== true ? editHandler : createHandler}
+          />
+        )}
       </div>
     </div>
   )

@@ -12,3 +12,15 @@ export const getPagination = ({ page, limit, count }: { page: number; limit: num
     records: count
   }
 }
+
+export const qString = (obj: Record<string, unknown>, remove: string[] = []): string => {
+  const keyValuePairs: string[] = []
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && obj[key] !== '' && !remove.includes(key)) {
+      keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(obj[key]))}`)
+    }
+  }
+
+  return keyValuePairs.join('&')
+}
