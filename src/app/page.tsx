@@ -155,8 +155,14 @@ const Home = () => {
               {data.map((i, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
-                  <td>{i.name}</td>
+                  <td>{i.professorName}</td>
                   <td>{i.university}</td>
+                  <td>{i.email}</td>
+                  <td>{i.emailType}</td>
+                  <td>{i.mailingDate as string}</td>
+                  <td>{i.priority}</td>
+                  <td>{i.result}</td>
+                  <td>{i.website}</td>
                   <td>
                     <div className="flex justify-end space-x-2">
                       <button

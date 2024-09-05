@@ -1,7 +1,7 @@
 import { ChangeEventHandler } from 'react'
 
 type Props = {
-  type?: 'text'
+  type?: 'text' | 'date'
   title: string
   name: string
   placeholder?: string
