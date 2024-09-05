@@ -12,7 +12,7 @@ export type TSubmission = {
   website: string
   email: string
   mailingDate: Date | string
-  emailType: 'new' | 'reply' | 'followup'
+  emailType: 'New' | 'Reply' | 'Followup'
   priority: 'High' | 'Medium' | 'Low'
   result: 'Positive' | 'Negative' | 'Neutral' | 'No Response'
   createdAt: Date | string

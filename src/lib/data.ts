@@ -1,6 +1,6 @@
 import { TSubmission } from '@/types'
 
-export const professorDesignations = [
+export const professorDesignations: { value: string; label: string }[] = [
   { value: 'Assistant Professor', label: 'Assistant Professor' },
   { value: 'Associate Professor', label: 'Associate Professor' },
   { value: 'Professor', label: 'Professor' },
@@ -14,10 +14,10 @@ export const professorDesignations = [
   { value: 'Senior Lecturer', label: 'Senior Lecturer' }
 ]
 
-export const emailTypes = [
-  { value: 'followup', label: 'followup' },
-  { value: 'reply', label: 'reply' },
-  { value: 'new', label: 'new' }
+export const emailTypes: { value: TSubmission['emailType']; label: TSubmission['emailType'] }[] = [
+  { value: 'Followup', label: 'Followup' },
+  { value: 'Reply', label: 'Reply' },
+  { value: 'New', label: 'New' }
 ]
 
 export const priority: { value: TSubmission['priority']; label: TSubmission['priority'] }[] = [
@@ -26,7 +26,7 @@ export const priority: { value: TSubmission['priority']; label: TSubmission['pri
   { value: 'Low', label: 'Low' }
 ]
 
-export const status: { value: TSubmission['result']; label: TSubmission['result'] }[] = [
+export const results: { value: TSubmission['result']; label: TSubmission['result'] }[] = [
   { value: 'Positive', label: 'Positive' },
   { value: 'Negative', label: 'Negative' },
   { value: 'Neutral', label: 'Neutral' },

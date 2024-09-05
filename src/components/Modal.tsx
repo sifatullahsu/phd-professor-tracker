@@ -1,4 +1,5 @@
-import { emailTypes, priority, professorDesignations, status } from '@/lib/data'
+/* eslint-disable no-undefined */
+import { emailTypes, priority, professorDesignations, results } from '@/lib/data'
 import { TSubmission } from '@/types'
 import { ChangeEventHandler, Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import Select from 'react-select'
@@ -52,7 +53,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             name="mailingDate"
             placeholder="mailingDate"
             title="Mailing Date"
-            value={data.mailingDate}
+            value={data?.mailingDate ? new Date(data.mailingDate as string).toISOString().slice(0, 10) : ''}
             onChange={changeHandler}
           />
           <CreatableSelect
@@ -60,6 +61,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             isClearable={true}
             options={professorDesignations}
             onChange={e => setData(p => ({ ...p, designation: e ? e.value : '' }))}
+            defaultValue={data?.designation ? { label: data.designation, value: data.designation } : null}
           />
           <Input
             name="website"
@@ -81,16 +83,16 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             placeholder="Priority"
             options={priority}
             isClearable={true}
-            onChange={e => setData(p => ({ ...p, priority: e ? e.value : '' }))}
+            onChange={e => setData(p => ({ ...p, priority: e ? e.value : undefined }))}
             defaultValue={data?.priority ? { label: data.priority, value: data.priority } : null}
             required={true}
           />
           <Select
-            placeholder="Status"
-            options={status}
-            defaultValue={data?.result ? { label: data.result, value: data.result } : null}
+            placeholder="Results"
+            options={results}
             isClearable={true}
             onChange={e => setData(p => ({ ...p, status: e ? e.value : '' }))}
+            defaultValue={data?.result ? { label: data.result, value: data.result } : null}
             required={true}
           />
 
