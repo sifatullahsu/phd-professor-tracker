@@ -37,7 +37,11 @@ export async function GET(req: Request) {
     const query: Record<string, unknown> = {}
 
     if (search) {
-      query['$or'] = [{ name: new RegExp(search, 'i') }, { university: new RegExp(search, 'i') }]
+      query['$or'] = [
+        { professorName: new RegExp(search, 'i') },
+        { university: new RegExp(search, 'i') },
+        { email: new RegExp(search, 'i') }
+      ]
     }
 
     const [result, count] = await Promise.all([
