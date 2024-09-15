@@ -1,8 +1,8 @@
 'use client'
-
 import Modal from '@/components/Modal'
 import { qString } from '@/lib/utils'
 import { TFilter, TPagination, TSubmission } from '@/types'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { MdEditNote, MdOutlineDeleteSweep } from 'react-icons/md'
 import Swal from 'sweetalert2'
@@ -22,7 +22,7 @@ const Home = () => {
   })
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       setIsLoading(true)
 
       const res = await fetch(`/api/submissions?${qString(filter)}`)
@@ -154,7 +154,6 @@ const Home = () => {
                 <th>Email Date </th>
                 <th>Priority </th>
                 <th>Result </th>
-                <th>Website </th>
                 <th className="text-end">Actions</th>
               </tr>
             </thead>
@@ -162,15 +161,14 @@ const Home = () => {
               {data.map((i, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
-                  <td>{i.professorName}</td>
+                  <td><Link href={i.website}>{i.professorName}</Link></td>
                   <td>{i.university}</td>
                   <td>{i.country}</td>
                   <td>{i.email}</td>
                   <td>{i.emailType}</td>
-                  <td>{i.mailingDate as string}</td>
+                  <td>{new Date(i.mailingDate as string).toLocaleDateString()}</td>
                   <td>{i.priority}</td>
                   <td>{i.result}</td>
-                  <td>{i.website}</td>
                   <td>
                     <div className="flex justify-end space-x-2">
                       <button
