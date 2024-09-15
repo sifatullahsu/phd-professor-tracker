@@ -3,6 +3,7 @@ import mongoose, { Model } from 'mongoose'
 
 const schema = new mongoose.Schema<TSubmission>(
   {
+    country: { type: String, trim: true, required: true },
     university: { type: String, trim: true, required: true },
     professorName: { type: String, trim: true, required: true },
     designation: { type: String, trim: true, required: true },

@@ -5,6 +5,7 @@ export type TRole = ''
 
 export type TSubmission = {
   _id: ObjectId | string
+  country: string
   university: string
   professorName: string
   designation: string
