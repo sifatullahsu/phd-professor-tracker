@@ -22,7 +22,7 @@ const Home = () => {
   })
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       setIsLoading(true)
 
       const res = await fetch(`/api/submissions?${qString(filter)}`)
@@ -142,7 +142,7 @@ const Home = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="table table-xs">
+          <table className="table table-sm">
             <thead>
               <tr>
                 <th></th>
@@ -159,9 +159,11 @@ const Home = () => {
             </thead>
             <tbody>
               {data.map((i, index) => (
-                <tr key={index} className='hover'>
+                <tr key={index} className="hover">
                   <th>{index + 1}</th>
-                  <td><Link href={i.website}>{i.professorName}</Link></td>
+                  <td>
+                    <Link href={i.website}>{i.professorName}</Link>
+                  </td>
                   <td>{i.university}</td>
                   <td>{i.country}</td>
                   <td>{i.email}</td>
