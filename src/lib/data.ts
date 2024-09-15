@@ -15,6 +15,7 @@ export const professorDesignations: { value: string; label: string }[] = [
 ]
 
 export const emailTypes: { value: TSubmission['emailType']; label: TSubmission['emailType'] }[] = [
+  { value: 'Shortlisted', label: 'Shortlisted' },
   { value: 'Followup', label: 'Followup' },
   { value: 'Reply', label: 'Reply' },
   { value: 'New', label: 'New' }

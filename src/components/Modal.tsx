@@ -48,7 +48,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             isClearable={true}
             options={countries}
             onChange={e => setData(p => ({ ...p, country: e ? e.value : '' }))}
-            defaultValue={data?.country ? { label: data.country, value: data.country } : null}
+            defaultValue={countries[0]}
           />
           <Input
             name="university"
@@ -90,7 +90,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             options={emailTypes}
             isClearable={true}
             onChange={e => setData(p => ({ ...p, emailTypes: e ? e.value : '' }))}
-            defaultValue={data?.emailType ? { label: data.emailType, value: data.emailType } : null}
+            defaultValue={emailTypes[0]}
             required={true}
           />
           <CreatableSelect
@@ -98,7 +98,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             options={priority}
             isClearable={true}
             onChange={e => setData(p => ({ ...p, priority: e ? e.value : undefined }))}
-            defaultValue={data?.priority ? { label: data.priority, value: data.priority } : null}
+            defaultValue={priority[0]}
             required={true}
           />
           <CreatableSelect
