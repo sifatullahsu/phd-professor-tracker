@@ -16,6 +16,7 @@ export type TSubmission = {
   emailType: 'Shortlisted' | 'New' | 'Reply' | 'Followup'
   priority: 'High' | 'Medium' | 'Low'
   result: 'Positive' | 'Negative' | 'Neutral' | 'No Response'
+  isEmailSent: boolean
   createdAt: Date | string
   updatedAt: Date | string
 }

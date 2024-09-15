@@ -13,7 +13,12 @@ const schema = new mongoose.Schema<TSubmission>(
     mailingDate: { type: Date, trim: true, required: true },
     emailType: { type: String, enum: ['Shortlisted', 'New', 'Reply', 'Followup'], default: 'Shortlisted' },
     priority: { type: String, enum: ['High', 'Medium', 'Low'], default: 'Low' },
-    result: { type: String, enum: ['Positive', 'Negative', 'Neutral', 'No Response'], default: 'No Response' }
+    result: {
+      type: String,
+      enum: ['Positive', 'Negative', 'Neutral', 'No Response'],
+      default: 'No Response'
+    },
+    isEmailSent: { type: Boolean, default: false }
   },
   {
     timestamps: true,
