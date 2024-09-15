@@ -142,14 +142,14 @@ const Home = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="table table-sm">
+          <table className="table table-xs">
             <thead>
               <tr>
                 <th></th>
                 <th>Name</th>
                 <th>University</th>
-                <th>Country</th>
                 <th>Email</th>
+                <th>Research Interest</th>
                 <th>Email Type</th>
                 <th>Email Date </th>
                 <th>Priority </th>
@@ -162,11 +162,34 @@ const Home = () => {
                 <tr key={index} className="hover">
                   <th>{index + 1}</th>
                   <td>
-                    <Link href={i.website}>{i.professorName}</Link>
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <div className="font-bold">
+                          <Link href={i.website}>{i.professorName}</Link>
+                        </div>
+                        <div className="text-sm opacity-50">{i.designation}</div>
+                      </div>
+                    </div>
                   </td>
-                  <td>{i.university}</td>
-                  <td>{i.country}</td>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <div className="font-bold">{i.university}</div>
+                        <div className="text-sm opacity-50">{i.country}</div>
+                      </div>
+                    </div>
+                  </td>
                   <td>{i.email}</td>
+                  <td>
+                    {i.researchInterests.map((interest, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </td>
                   <td>{i.emailType}</td>
                   <td>{new Date(i.mailingDate as string).toLocaleDateString()}</td>
                   <td>{i.priority}</td>
