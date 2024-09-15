@@ -1,4 +1,6 @@
 'use client'
+import RightIcon from '@/components/icons/RightIcon'
+import WarningIcon from '@/components/icons/WarningIcon'
 import Modal from '@/components/Modal'
 import { qString } from '@/lib/utils'
 import { TFilter, TPagination, TSubmission } from '@/types'
@@ -154,6 +156,7 @@ const Home = () => {
                 <th>Email Date </th>
                 <th>Priority </th>
                 <th>Result </th>
+                <th>Email Send</th>
                 <th className="text-end">Actions</th>
               </tr>
             </thead>
@@ -194,6 +197,7 @@ const Home = () => {
                   <td>{new Date(i.mailingDate as string).toLocaleDateString()}</td>
                   <td>{i.priority}</td>
                   <td>{i.result}</td>
+                  <td>{i.isEmailSent ? <RightIcon /> : <WarningIcon />}</td>
                   <td>
                     <div className="flex justify-end space-x-2">
                       <button
