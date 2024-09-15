@@ -1,4 +1,4 @@
-import { TSubmission } from '@/types';
+import { TSubmission } from '@/types'
 
 export const professorDesignations: { value: string; label: string }[] = [
   { value: 'Assistant Professor', label: 'Assistant Professor' },
@@ -36,5 +36,13 @@ export const results: { value: TSubmission['result']; label: TSubmission['result
 export const countries: { value: string; label: string }[] = [
   { value: 'United States', label: 'USA' },
   { value: 'Canada', label: 'Canada' },
-  { value: 'Australia', label: 'Australia' },
+  { value: 'Australia', label: 'Australia' }
+]
+
+export const researchInterests = [
+  { value: 'HCI', label: 'HCI' },
+  { value: 'NLP', label: 'NLP' },
+  { value: 'ML', label: 'ML' },
+  { value: 'Visualization', label: 'Visualization' },
+  { value: 'Data Science', label: 'Data Science' }
 ]

@@ -1,8 +1,16 @@
 /* eslint-disable no-undefined */
-import { countries, emailTypes, priority, professorDesignations, results } from '@/lib/data'
+import {
+  countries,
+  emailTypes,
+  priority,
+  professorDesignations,
+  researchInterests,
+  results
+} from '@/lib/data'
 import { TSubmission } from '@/types'
 import { ChangeEventHandler, Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import Select from 'react-select'
+import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
 import Input from './Input'
 
@@ -15,6 +23,7 @@ type TProps = {
 
 const Modal = ({ open, setOpen, submitHandler }: TProps) => {
   const [data, setData] = useState<Partial<TSubmission>>(open && typeof open !== 'boolean' ? open : {})
+  const animatedComponents = makeAnimated()
 
   const changeHandler: ChangeEventHandler<HTMLInputElement> = e => {
     const key = e.target.name
@@ -34,13 +43,6 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
         <h3 className="font-bold text-lg">Create Submission</h3>
 
         <form onSubmit={onSubmit} className="space-y-3">
-          <Input
-            name="professorName"
-            placeholder="professor name"
-            title="Professor Name"
-            value={data.professorName}
-            onChange={changeHandler}
-          />
           <CreatableSelect
             placeholder="Country"
             isClearable={true}
@@ -51,16 +53,13 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
           <Input
             name="university"
             placeholder="university"
-            title="University"
             value={data.university}
             onChange={changeHandler}
           />
           <Input
-            type="date"
-            name="mailingDate"
-            placeholder="mailingDate"
-            title="Mailing Date"
-            value={data?.mailingDate ? new Date(data.mailingDate as string).toISOString().slice(0, 10) : ''}
+            name="professorName"
+            placeholder="Professor Name"
+            value={data.professorName}
             onChange={changeHandler}
           />
           <CreatableSelect
@@ -70,15 +69,23 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             onChange={e => setData(p => ({ ...p, designation: e ? e.value : '' }))}
             defaultValue={data?.designation ? { label: data.designation, value: data.designation } : null}
           />
+          <Input name="email" placeholder="email" value={data.email} onChange={changeHandler} />
+          <Input name="website" placeholder="website" value={data.website} onChange={changeHandler} />
+          <Select
+            placeholder="Research Interest"
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            options={researchInterests}
+          />
           <Input
-            name="website"
-            placeholder="website"
-            title="Website"
-            value={data.website}
+            type="date"
+            name="mailingDate"
+            placeholder="mailingDate"
+            value={data?.mailingDate ? new Date(data.mailingDate as string).toISOString().slice(0, 10) : ''}
             onChange={changeHandler}
           />
-          <Input name="email" placeholder="email" title="Email" value={data.email} onChange={changeHandler} />
-          <Select
+          <CreatableSelect
             placeholder="Email Type"
             options={emailTypes}
             isClearable={true}
@@ -86,7 +93,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             defaultValue={data?.emailType ? { label: data.emailType, value: data.emailType } : null}
             required={true}
           />
-          <Select
+          <CreatableSelect
             placeholder="Priority"
             options={priority}
             isClearable={true}
@@ -94,7 +101,7 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             defaultValue={data?.priority ? { label: data.priority, value: data.priority } : null}
             required={true}
           />
-          <Select
+          <CreatableSelect
             placeholder="Results"
             options={results}
             isClearable={true}

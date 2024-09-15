@@ -2,7 +2,7 @@ import { ChangeEventHandler } from 'react'
 
 type Props = {
   type?: 'text' | 'date'
-  title: string
+  title?: string
   name: string
   placeholder?: string
   value?: string
@@ -13,9 +13,11 @@ const Input = ({ type = 'text', title, name, value, placeholder, onChange }: Pro
   return (
     <div>
       <label className="form-control w-full">
-        <div className="label">
-          <span className="label-text">{title}</span>
-        </div>
+        {title && (
+          <div className="label">
+            <span className="label-text">{title}</span>
+          </div>
+        )}
         <input
           type={type}
           name={name}

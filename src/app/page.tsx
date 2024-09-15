@@ -159,7 +159,7 @@ const Home = () => {
             </thead>
             <tbody>
               {data.map((i, index) => (
-                <tr key={index}>
+                <tr key={index} className='hover'>
                   <th>{index + 1}</th>
                   <td><Link href={i.website}>{i.professorName}</Link></td>
                   <td>{i.university}</td>
