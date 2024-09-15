@@ -148,7 +148,14 @@ const Home = () => {
                 <th></th>
                 <th>Name</th>
                 <th>University</th>
-                <th className="text-end">Action Buttons</th>
+                <th>Country</th>
+                <th>Email</th>
+                <th>Email Type</th>
+                <th>Email Date </th>
+                <th>Priority </th>
+                <th>Result </th>
+                <th>Website </th>
+                <th className="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +164,7 @@ const Home = () => {
                   <th>{index + 1}</th>
                   <td>{i.professorName}</td>
                   <td>{i.university}</td>
+                  <td>{i.country}</td>
                   <td>{i.email}</td>
                   <td>{i.emailType}</td>
                   <td>{i.mailingDate as string}</td>

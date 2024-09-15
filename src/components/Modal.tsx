@@ -1,5 +1,5 @@
 /* eslint-disable no-undefined */
-import { emailTypes, priority, professorDesignations, results } from '@/lib/data'
+import { countries, emailTypes, priority, professorDesignations, results } from '@/lib/data'
 import { TSubmission } from '@/types'
 import { ChangeEventHandler, Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import Select from 'react-select'
@@ -40,6 +40,13 @@ const Modal = ({ open, setOpen, submitHandler }: TProps) => {
             title="Professor Name"
             value={data.professorName}
             onChange={changeHandler}
+          />
+          <CreatableSelect
+            placeholder="Country"
+            isClearable={true}
+            options={countries}
+            onChange={e => setData(p => ({ ...p, country: e ? e.value : '' }))}
+            defaultValue={data?.country ? { label: data.country, value: data.country } : null}
           />
           <Input
             name="university"
